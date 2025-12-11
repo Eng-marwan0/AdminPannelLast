@@ -1,0 +1,105 @@
+﻿@page "/DashBoard"
+@inject IJSRuntime JS
+
+<div class="page-header mb-6">
+    <h1 class="page-title">
+        لوحة التحكم
+    </h1>
+    <p class="page-subtitle">
+        نظرة عامة سريعة على النظام.
+    </p>
+</div>
+
+<!-- كروت إحصائيات -->
+<div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 xl:grid-cols-4">
+
+    <div class="card stats-card flex items-center">
+        <div class="p-3 ml-3 bg-blue-100 rounded-full">
+            <span class="text-lg">📦</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">عدد الطلبات</p>
+            <p class="text-xl font-semibold">1520</p>
+        </div>
+    </div>
+
+    <div class="card stats-card flex items-center">
+        <div class="p-3 ml-3 bg-green-100 rounded-full">
+            <span class="text-lg">👤</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">عدد المستخدمين</p>
+            <p class="text-xl font-semibold">320</p>
+        </div>
+    </div>
+
+    <div class="card stats-card flex items-center">
+        <div class="p-3 ml-3 bg-purple-100 rounded-full">
+            <span class="text-lg">🚚</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">شركات التوصيل</p>
+            <p class="text-xl font-semibold">12</p>
+        </div>
+    </div>
+
+    <div class="card stats-card flex items-center">
+        <div class="p-3 ml-3 bg-yellow-100 rounded-full">
+            <span class="text-lg">⏳</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">الطلبات المعلقة</p>
+            <p class="text-xl font-semibold">18</p>
+        </div>
+    </div>
+</div>
+
+<!-- قسم بسيط إضافي -->
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="card">
+        <h2 class="mb-2 text-lg font-semibold">آخر الأحداث</h2>
+        <ul class="space-y-1 text-sm">
+            <li>تم إكمال 12 طلب اليوم</li>
+            <li>تم إضافة 3 مستخدمين جدد</li>
+            <li>تحديث بيانات شركة توصيل بغداد إكسبريس</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3 class="mb-2 text-lg font-semibold">إحصائيات الطلبات</h3>
+
+        <div style="height:200px;">
+            <canvas id="ordersChart" style="width:100%; height:100%;"></canvas>
+        </div>
+
+        <div style="height:200px; margin-top:12px;">
+            <canvas id="statusChart" style="width:100%; height:100%;"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // رسم الخط الزمني
+            await JS.InvokeVoidAsync(
+                "renderDashboardChart",
+                "ordersChart",
+                new[] { "Jan", "Feb", "Mar", "Apr", "May" },
+                new[] { 10, 25, 18, 40, 35 }
+            );
+
+            // رسم دائري للحالات
+            await JS.InvokeVoidAsync(
+                "renderStatusPieChart",
+                "statusChart",
+                new[] { "مكتمل", "قيد الانتظار", "ملغي", "قيد التوصيل" },
+                new[] { 45, 10, 8, 22 }
+            );
+        }
+    }
+}

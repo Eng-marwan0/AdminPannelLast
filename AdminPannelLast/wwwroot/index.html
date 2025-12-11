@@ -7,6 +7,24 @@
     <title>Grande B Admin</title>
     <base href="/" />
 
+    <!-- Ensure Tailwind uses class-based dark mode and set initial theme early -->
+    <script>
+        // Configure Tailwind CDN to use class strategy for dark mode
+        window.tailwind = window.tailwind || {};
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
+        };
+
+        // Apply saved theme immediately to avoid flash of incorrect theme
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'dark') document.documentElement.classList.add('dark');
+            } catch (e) { }
+        })();
+    </script>
+
     <!-- TailwindCSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -17,7 +35,7 @@
     <link href="css/app.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900">
+<body>
     <div id="app">Loading...</div>
 
     <!-- Blazor -->
@@ -25,6 +43,12 @@
 
     <!-- Flowbite JS -->
     <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/charts.js"></script>
+    <script src="/js/language.js"></script>
+    
+
 </body>
 
 </html>

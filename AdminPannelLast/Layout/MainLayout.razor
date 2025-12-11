@@ -1,53 +1,70 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inherits LayoutComponentBase
 @inject LanguageService Lang
+@inject IJSRuntime JS
 
 <div dir="@Lang.Direction" class="layout">
 
     <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar @(IsMini ? "mini" : "")">
 
-        <!-- عنوان القائمة -->
         <div class="sidebar-header">
             <span class="title">@T("Menu", "القائمة")</span>
 
             <button class="toggle-btn" @onclick="ToggleSidebar">
-                @(IsMini ? "⮜" : "⮞")
+                @GetSidebarArrow()
             </button>
         </div>
 
-        <!-- روابط القائمة -->
         <nav class="menu">
-            <a href="/dashboard"><span class="icon">📊</span> <span class="label @(IsMini ? "hide" : "")">@T("Dashboard", "لوحة التحكم")</span></a>
-            <a href="/orders"><span class="icon">📦</span> <span class="label @(IsMini ? "hide" : "")">@T("Orders", "الطلبات")</span></a>
-            <a href="/users"><span class="icon">👥</span> <span class="label @(IsMini ? "hide" : "")">@T("Users", "المستخدمون")</span></a>
-            <a href="/delivery"><span class="icon">🚚</span> <span class="label @(IsMini ? "hide" : "")">@T("Delivery", "شركات التوصيل")</span></a>
-        </nav>
+            <NavLink class="menu-item" href="/dashboard" Match="NavLinkMatch.All">
+                <span class="icon">📊</span>
+                <span class="label">@T("Dashboard", "لوحة التحكم")</span>
+            </NavLink>
 
-        <!-- اللغة أسفل القائمة -->
-        <div class="sidebar-lang">
-            <button @onclick="@(() => ChangeLang(" ar"))">AR</button>
-            <button @onclick="@(() => ChangeLang(" en"))">EN</button>
-        </div>
+            <NavLink class="menu-item" href="/orders">
+                <span class="icon">📦</span>
+                <span class="label">@T("Orders", "الطلبات")</span>
+            </NavLink>
+
+            <NavLink class="menu-item" href="/users">
+                <span class="icon">👥</span>
+                <span class="label">@T("Users", "المستخدمون")</span>
+            </NavLink>
+
+            <NavLink class="menu-item" href="/delivery">
+                <span class="icon">🚚</span>
+                <span class="label">@T("Delivery", "شركات التوصيل")</span>
+            </NavLink>
+        </nav>
 
     </aside>
 
     <!-- ========== MAIN AREA ========== -->
     <div class="main">
 
-        <!-- الشريط العلوي -->
         <header class="topbar">
 
             <button class="menu-btn" @onclick="ToggleSidebar">☰</button>
 
             <span class="top-title">@T("Admin Panel", "لوحة الإدارة")</span>
 
-            <button class="lang-btn" @onclick="ToggleLanguage">
-                🌐 @Lang.Language.ToUpper()
-            </button>
+            <div style="display:flex; gap:8px; align-items:center;">
+
+                <!-- زر اللغة (يعرض العكس) -->
+                <button class="lang-btn" @onclick="ToggleLanguage">
+                    🌐 @(Lang.Language == "ar" ? "EN" : "AR")
+                </button>
+
+                <!-- زر الثيم -->
+                <button class="lang-btn" @onclick="ToggleTheme">
+                    @(IsDark? "🌙 Dark" : "☀️ Light")
+                </button>
+
+            </div>
 
         </header>
 
-        <!-- محتوى الصفحات -->
         <main>
             @Body
         </main>
@@ -56,20 +73,97 @@
 
 </div>
 
-@code {
+@code{
+
     bool IsMini = false;
+    bool IsDark = false;
 
     void ToggleSidebar() => IsMini = !IsMini;
 
+    // ❗ يجلب اللغة من LocalStorage ويغيير لغة الموقع
     void ToggleLanguage()
-        => ChangeLang(Lang.Language == "ar" ? "en" : "ar");
-
-    void ChangeLang(string lang)
     {
-        Lang.SetLanguage(lang);
+        var newLang = Lang.Language == "en" ? "ar" : "en";
+
+        Lang.SetLanguage(newLang);
+
+        // حفظ اللغة الجديدة في LocalStorage
+        JS.InvokeVoidAsync("languageManager.saveLanguage", newLang);
+
         StateHasChanged();
     }
 
+    // الترجمة حسب اللغة الحالية
     string T(string en, string ar)
         => Lang.Language == "ar" ? ar : en;
+
+    // اختيار اتجاه سهم القائمة حسب اللغة وحالة التصغير
+    string GetSidebarArrow()
+    {
+        if (Lang.Language == "ar")
+        {
+            // عربي: القائمة يمين، مصغّرة = سهم للداخل (يسار)، مفتوحة = سهم للخارج (يمين)
+            return IsMini ? "⮜" : "⮞";
+        }
+        else
+        {
+            // إنجليزي: القائمة يسار، مصغّرة = سهم للداخل (يمين)، مفتوحة = سهم للخارج (يسار)
+            return IsMini ? "⮞" : "⮜";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lang.OnChange += StateHasChanged;
+
+        // تحميل اللغة المحفوظة
+        var savedLang = await JS.InvokeAsync<string>("languageManager.getLanguage");
+
+        Lang.SetLanguage(savedLang);
+
+        StateHasChanged();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var theme = await JS.InvokeAsync<string>("themeManager.getTheme");
+                IsDark = theme == "dark";
+                StateHasChanged();
+            }
+            catch { }
+        }
+    }
+
+    async Task ToggleTheme()
+    {
+        try
+        {
+            var current = await JS.InvokeAsync<string>("themeManager.getTheme");
+
+            if (current == "dark")
+            {
+                await JS.InvokeVoidAsync("themeManager.saveTheme", "light");
+                await JS.InvokeVoidAsync("themeManager.applyLight");
+                IsDark = false;
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("themeManager.saveTheme", "dark");
+                await JS.InvokeVoidAsync("themeManager.applyDark");
+                IsDark = true;
+            }
+
+            StateHasChanged();
+        }
+        catch { }
+    }
+
+    public void Dispose()
+    {
+        Lang.OnChange -= StateHasChanged;
+    }
 }

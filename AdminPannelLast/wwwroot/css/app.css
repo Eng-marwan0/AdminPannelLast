@@ -1,24 +1,87 @@
-﻿.layout {
-    display: flex;
-    height: 100vh;
+﻿:root {
+    /* Light theme variables adapted to GRANDE B identity */
+    --brand-primary: #e84a24; /* GRANDE B orange */
+    --brand-primary-dark: #c43b1c;
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0b1220;
+
+    --bg: #f8fafc; /* خلفية الصفحة الأساسية */
+    --main-bg: #ffffff; /* خلفية منطقة المحتوى */
+    --sidebar-bg: #ffffff; /* خلفية القائمة الجانبية */
+    --topbar-bg: #ffffff; /* خلفية الشريط العلوي */
+    --card-bg: #ffffff; /* كروت فاتحة */
+    --card-border: rgba(0,0,0,0.08);
+    --text: var(--brand-text-dark); /* نص غامق مناسب للوضع الفاتح */
+    --muted: #6b7280;
+    --muted-2: #9aa6b2;
+    --accent: var(--brand-primary);
 }
 
+    :root.dark, .dark {
+        /* Dark theme variables */
+        --bg: #050913;          /* خلفية عامة داكنة */
+        --main-bg: #050913;     /* خلفية منطقة المحتوى */
+        --sidebar-bg: #07121b;  /* خلفية القائمة الجانبية */
+        --topbar-bg: #08121a;   /* خلفية البانر العلوي */
+        --card-bg: #0b1220;     /* خلفية الكروت */
+        --card-border: rgba(255,255,255,0.08);
+        --text: #e6eef8;
+        --muted: #9aa6b2;
+        --muted-2: #94a3b8;
+        --accent: var(--brand-primary);
+    }
+
+/* Layout Container */
+.layout {
+    display: flex;
+    height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Sidebar */
 .sidebar {
     width: 250px;
-    background: #0f1a2b;
-    color: #fff;
+    background: #ffe0cc; /* أغمق قليلاً ليتباين مع الخلفية */
+    color: var(--brand-text-dark);
     padding: 15px;
-    transition: 0.3s;
+    transition: width 0.25s ease, background 0.25s ease;
+    box-sizing: border-box;
+    overflow: hidden; /* إخفاء أي نص يخرج عند التصغير */
 }
 
     .sidebar.mini {
         width: 70px;
     }
 
-    .sidebar .label.hide {
-        display: none;
+    .sidebar .title {
+        font-weight: 600;
+        color: var(--brand-text-dark);
+        white-space: nowrap;
     }
 
+    .sidebar.mini .title {
+        display: none; /* عند التصغير أخفِ كلمة "القائمة" واترك المفتاح مرئيًا */
+    }
+
+    .sidebar .menu-item {
+        color: var(--brand-text-dark);
+    }
+
+    .sidebar.mini .label {
+        display: none; /* إخفاء نص العنصر والإبقاء على الأيقونة فقط عند التصغير */
+    }
+
+/* في الوضع الليلي تأكد أن النص في القائمة الجانبية يكون فاتح وواضح */
+.dark .sidebar .title,
+.dark .sidebar .menu-item,
+.dark .sidebar .menu-item .label,
+.dark .sidebar .menu-item .icon {
+    color: #e5e7eb;
+}
+
+/* Sidebar Header */
 .sidebar-header {
     display: flex;
     justify-content: space-between;
@@ -27,24 +90,68 @@
     font-size: 18px;
 }
 
-.menu a {
+/* Buttons */
+.toggle-btn,
+.menu-btn,
+.lang-btn {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.65);
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-weight: 600;
+}
+
+/* زر إخفاء / إظهار القائمة داخل الـ sidebar */
+.sidebar .toggle-btn {
+    background: #ffffff;
+    color: var(--brand-primary);
+    border-color: rgba(0,0,0,0.06);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.sidebar .toggle-btn:hover {
+    background: #ffe0cc;
+}
+
+/* Menu */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.menu-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px;
-    color: #eee;
+    padding: 10px;
+    color: var(--text);
     text-decoration: none;
     border-radius: 8px;
-    transition: background 0.2s;
+    background: transparent;
+    transition: background 0.15s, padding-left 0.15s;
 }
 
-    .menu a:hover {
-        background: #1d2d44;
+    .menu-item:hover {
+        background: rgba(0,0,0,0.02); /* Light mode hover */
     }
 
+.dark .menu-item:hover {
+    background: rgba(255,255,255,0.05); /* Dark mode hover */
+}
+
+.menu-item.active {
+    background: linear-gradient(90deg, rgba(232,74,36,0.18), rgba(232,74,36,0));
+}
+
+/* Main Content */
 .main {
     flex: 1;
-    background: #0a1624;
+    background: #fdf7f4; /* خلفية مائلة للبرتقالي الفاتح ومريحة للعين */
+    display: flex;
+    flex-direction: column;
 }
 
 .topbar {
@@ -52,23 +159,151 @@
     justify-content: space-between;
     padding: 15px;
     align-items: center;
-    background: #112;
-    color: white;
+    background: var(--brand-primary); /* البانر العلوي برتقالي من الهوية */
+    color: var(--brand-text-light);
+    border-bottom: 1px solid var(--brand-primary-dark);
 }
 
-.menu-btn {
-    font-size: 22px;
-    background: none;
+.topbar .top-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+}
+
+/* Cards */
+.p-4, .card {
+    background: #fff9f5; /* أفتح من قبل، إحساس ألوان صباح هادئة */
+    border: 1px solid var(--brand-primary); /* إطار برتقالي واضح من لون الهوية */
+    color: var(--brand-text-dark); /* نص غامق ليتباين مع الخلفية الفاتحة */
+    border-radius: 14px;
+}
+
+/* عناوين الكروت والنصوص الصغيرة داخلها */
+.card h2, .card h3, .card h4,
+.p-4 h2, .p-4 h3, .p-4 h4 {
+    color: var(--brand-text-dark);
+}
+
+.card p, .p-4 p,
+.card span, .p-4 span,
+.card li, .p-4 li {
+    color: #4b5563;
+}
+
+/* Page Content */
+main {
+    padding: 20px;
+    color: var(--text);
+}
+
+/* Canvas background */
+canvas {
+    background: transparent;
+}
+
+/* Brand-specific components */
+.header-brand {
+    background-color: var(--brand-primary);
+    color: var(--brand-text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.header-brand-logo {
+    height: 64px;
+    margin-bottom: 0.5rem;
+}
+
+.header-brand-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.card-brand {
+    border-radius: 18px;
+    border: 1px solid var(--card-border);
+    padding: 1.5rem;
+    background: var(--card-bg);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.btn-brand {
+    background-color: var(--brand-primary);
+    color: var(--brand-text-light);
+    border-radius: 999px;
     border: none;
-    color: white;
+    padding: 0.6rem 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.lang-btn {
-    background: none;
-    border: 1px solid #fff;
-    padding: 5px 10px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
+.btn-brand:hover {
+    background-color: var(--brand-primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Page Header Styles */
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1f2933; /* لون غامق وواضح فوق الخلفية الفاتحة */
+}
+
+.page-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #4b5563; /* رمادي متوسط الوضوح */
+}
+
+.dark .layout {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.dark .sidebar {
+    background: var(--sidebar-bg);
+    color: var(--text);
+}
+
+.dark .main {
+    background: var(--main-bg);
+}
+
+.dark .topbar {
+    background: var(--topbar-bg);
+    color: var(--text);
+    border-bottom-color: var(--card-border);
+}
+
+.dark .card,
+.dark .p-4 {
+    background: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text);
+}
+
+.dark .card h2,
+.dark .card h3,
+.dark .card h4,
+.dark .card p,
+.dark .card span,
+.dark .card li,
+.dark .p-4 h2,
+.dark .p-4 h3,
+.dark .p-4 h4,
+.dark .p-4 p,
+.dark .p-4 span,
+.dark .p-4 li {
+    color: var(--text);
 }
