@@ -1,0 +1,78 @@
+﻿@page "/"
+
+<h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+    لوحة التحكم
+</h1>
+
+<p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+    نظرة عامة سريعة على النظام.
+</p>
+
+<!-- كروت إحصائيات -->
+<div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 xl:grid-cols-4">
+
+    <div class="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-3 ml-3 bg-blue-100 rounded-full dark:bg-blue-900">
+            <span class="text-blue-700 dark:text-blue-200 text-lg">📦</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">عدد الطلبات</p>
+            <p class="text-xl font-semibold text-gray-900 dark:text-white">1520</p>
+        </div>
+    </div>
+
+    <div class="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-3 ml-3 bg-green-100 rounded-full dark:bg-green-900">
+            <span class="text-green-700 dark:text-green-200 text-lg">👤</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">عدد المستخدمين</p>
+            <p class="text-xl font-semibold text-gray-900 dark:text-white">320</p>
+        </div>
+    </div>
+
+    <div class="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-3 ml-3 bg-purple-100 rounded-full dark:bg-purple-900">
+            <span class="text-purple-700 dark:text-purple-200 text-lg">🚚</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">شركات التوصيل</p>
+            <p class="text-xl font-semibold text-gray-900 dark:text-white">12</p>
+        </div>
+    </div>
+
+    <div class="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-3 ml-3 bg-yellow-100 rounded-full dark:bg-yellow-900">
+            <span class="text-yellow-600 dark:text-yellow-200 text-lg">⏳</span>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">الطلبات المعلقة</p>
+            <p class="text-xl font-semibold text-gray-900 dark:text-white">18</p>
+        </div>
+    </div>
+</div>
+
+<!-- قسم بسيط إضافي -->
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">آخر الأحداث</h2>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+            <li>تم إكمال 12 طلب اليوم</li>
+            <li>تم إضافة 3 مستخدمين جدد</li>
+            <li>تحديث بيانات شركة توصيل بغداد إكسبريس</li>
+        </ul>
+    </div>
+
+    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm
+                dark:bg-gray-800 dark:border-gray-700">
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">ملاحظات إدارية</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+            لاحقًا سنربط هذه الصفحة مع الـ API الحقيقي، ونحوّل الأرقام أعلاه إلى بيانات حقيقية من النظام.
+        </p>
+    </div>
+</div>
